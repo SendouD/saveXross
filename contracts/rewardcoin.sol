@@ -13,7 +13,7 @@ contract RewardTokens is ERC20, Ownable,AccessControl {
     {}
        bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
         function GrantMinterAccess(address minter) public onlyOwner{
-       
+        
          _grantRole(MINTER_ROLE, minter);
     }
     function mint(address to, uint256 amount) public  {

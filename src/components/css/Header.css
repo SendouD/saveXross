@@ -26,6 +26,7 @@
     white-space: nowrap;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    margin-right: 20px;
 }
 
 .rescue-btn:hover {
@@ -59,4 +60,9 @@
 
 .header-left {
 
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
 }

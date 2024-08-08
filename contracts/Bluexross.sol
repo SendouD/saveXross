@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "./RewardTokens.sol";
-import "./StakeTokens.sol";
+ import "./stakecoin.sol";
+import "./rewardcoin.sol";
 import "hardhat/console.sol";
 contract Bluexross is Ownable, AccessControl{
     
@@ -35,8 +35,6 @@ contract Bluexross is Ownable, AccessControl{
     event Status(string status,string Rewardstatus);
     mapping (string=>uint8) private IssuestoTime;
     mapping (address=>bool) private UserList;
-   
-    
 
    
     StakeTokens StakeToken;
@@ -52,14 +50,18 @@ contract Bluexross is Ownable, AccessControl{
         _;
 
     }
-    function newUser(address _user)public{
-        require(UserList[_user]==false,"You are already a user ;[[");
-        UserList[_user]=true;
-        StakeToken.mint(_user, 5);
-        emit newuser(_user);
+    function newUser()public{
+        require(UserList[msg.sender]==false,"You are already a user ;[[");
+        UserList[msg.sender]=true;
+        StakeToken.mint(msg.sender, 5);
+        emit newuser(msg.sender);
     }
-    function getbalance(address _user)public view returns(uint256) {
-        return StakeToken.balanceOf(_user);
+    function getstakebalance()public view returns(uint256) {
+        console.log(msg.sender);
+        return StakeToken.balanceOf(msg.sender);
+    }
+      function getrewardbalance()public view returns(uint256) {
+        return RewardToken.balanceOf(msg.sender);
     }
     
     function GrantVerifyAccess(address _Verifier) public onlyOwner{
@@ -76,7 +78,7 @@ contract Bluexross is Ownable, AccessControl{
             user: msg.sender,
             Id: issues.length+1,
             phoneno: phoneNo,
-            address: addres,
+            addres: addres,
             fakeissue: false,
             time: time,
             timestamp: block.timestamp,
@@ -112,6 +114,11 @@ contract Bluexross is Ownable, AccessControl{
 
         }
     }
+
+    function getIssues() public view returns(Issue[] memory) {
+        require(hasRole(VERIFIER, msg.sender), "Caller is not a VERIFIER");
+        return issues;
+    }
    
     function RewardForRescue(address _user)private {
         StakeToken.transfer(_user,5);
@@ -121,18 +128,18 @@ contract Bluexross is Ownable, AccessControl{
     function CheckAndReward(uint256 id) public {
         require(id <= issues.length, "Invalid issue ID");
 
-        Issue storage issue = issues[id-1];
+        Issue memory issue = issues[id-1];
         
        
 
         if (block.timestamp > issue.timestamp + issue.time) {
             issue.status = "unattended";
             RewardForRescue(issue.user);
-             issue.rewardstatus="Reward successfull";
+            issue.rewardstatus="Reward successfull";
             emit Status(issue.status,issue.rewardstatus);
         }
         else{
-              issue.rewardstatus="Ruko Jaara Sabar Karo ;]]";
+              issue.rewardstatus="pending";
             emit Status(issue.status,issue.rewardstatus);
         }
     }
