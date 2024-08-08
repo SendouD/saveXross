@@ -29,13 +29,14 @@ contract Bluexross is Ownable, AccessControl{
         string status;
         string rewardstatus;
     }
-    Issue[] issues;
+    Issue[] public issues;
+
     event IssueRised(Issue _issue,uint256 Time,string status);
     event newuser(address indexed _user);
     event Status(string status,string Rewardstatus);
     mapping (string=>uint8) private IssuestoTime;
     mapping (address=>bool) private UserList;
-
+    mapping (address=>uint256[]) private AddresstoIds;
    
     StakeTokens StakeToken;
     RewardTokens RewardToken;
@@ -74,6 +75,7 @@ contract Bluexross is Ownable, AccessControl{
     function IssueRescue(string memory rescuetype,string memory phoneNo,string memory addres)public stakecoins {
        
         uint256 time=IssuestoTime[rescuetype];
+        console.log(issues.length);
         Issue memory issue = Issue({
             user: msg.sender,
             Id: issues.length+1,
@@ -85,32 +87,32 @@ contract Bluexross is Ownable, AccessControl{
             status: "pending",
             rewardstatus:"pending"
         });
+        AddresstoIds[msg.sender].push(issues.length+1);
+
         issues.push(issue);
-        console.log(issues.length);
-        
          
         emit IssueRised(issue,time,"pending");
     }
+    
     function IssueVerify(bool issueDetail, uint256 id) external {
         require(hasRole(VERIFIER, msg.sender), "Caller is not a VERIFIER");
         require(id <= issues.length, "Invalid issue ID");
 
-        Issue storage issue = issues[id-1];
-        require(keccak256(bytes(issue.status)) == keccak256(bytes("pending")), "Issue already verified");
+        require(keccak256(bytes(issues[id-1].status)) == keccak256(bytes("pending")), "Issue already verified");
 
-        issue.fakeissue = issueDetail;
+        issues[id-1].fakeissue = issueDetail;
         if (!issueDetail) {
-            issue.status = "completed";
+            issues[id-1].status = "completed";
 
-            RewardForRescue(issue.user);
-            issue.rewardstatus="Reward successfull";
-            emit Status(issue.status,issue.rewardstatus);
+            RewardForRescue(issues[id-1].user);
+            issues[id-1].rewardstatus="Reward successfull";
+            emit Status(issues[id-1].status,issues[id-1].rewardstatus);
         }
         else{
-            issue.status="fake issue";
-             issue.rewardstatus="stake coin is gone :]] ";
+            issues[id-1].status="fake issue";
+            issues[id-1].rewardstatus="stake coin is gone :]] ";
 
-            emit Status(issue.status,issue.rewardstatus);
+            emit Status(issues[id-1].status,issues[id-1].rewardstatus);
 
         }
     }
@@ -125,22 +127,25 @@ contract Bluexross is Ownable, AccessControl{
         RewardToken.mint(_user, 2);
     }
 
+    function getCheckAndReward() public view returns (uint256[] memory) {
+        return AddresstoIds[msg.sender];
+    }
+
     function CheckAndReward(uint256 id) public {
         require(id <= issues.length, "Invalid issue ID");
 
-        Issue memory issue = issues[id-1];
-        
-       
+        require(issues[id-1].user == msg.sender, "You are not the owner of the issue!");
 
-        if (block.timestamp > issue.timestamp + issue.time) {
-            issue.status = "unattended";
-            RewardForRescue(issue.user);
-            issue.rewardstatus="Reward successfull";
-            emit Status(issue.status,issue.rewardstatus);
+        if (block.timestamp > issues[id-1].timestamp + issues[id-1].time) {
+            console.log("HITTTT");
+            issues[id-1].status = "unattended";
+            RewardForRescue(issues[id-1].user);
+            issues[id-1].rewardstatus="Reward successfull";
+            emit Status(issues[id-1].status,issues[id-1].rewardstatus);
         }
         else{
-              issue.rewardstatus="pending";
-            emit Status(issue.status,issue.rewardstatus);
+            issues[id-1].rewardstatus="pending";
+            emit Status(issues[id-1].status,issues[id-1].rewardstatus);
         }
     }
 

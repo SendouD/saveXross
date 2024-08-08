@@ -12,12 +12,12 @@ function App() {
 
   return(
     <>
-        <Routes>
-            <Route path="/" element={<User blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress}/>}/>
-            <Route path="/user" element={<User blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress}/>}/>
-            <Route path="/verifier" element={<Verifier blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress}/>}/>
-            <Route path="/admin" element={<Admin blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress}/>}/>
-        </Routes>
+      <Routes>
+        <Route path="/" element={<User blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress}/>}/>
+        <Route path="/user" element={<User blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress}/>}/>
+        <Route path="/verifier" element={<Verifier blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress}/>}/>
+        <Route path="/admin" element={<Admin blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress}/>}/>
+      </Routes>
     </>
   )
 }

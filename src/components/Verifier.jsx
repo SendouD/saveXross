@@ -52,6 +52,7 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
       }
       getBalance();
       setIssues(null);
+      console.log(issues)
   
       return () => {
         if (elementRef.current) {
@@ -61,18 +62,26 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
     }, []);
 
     async function getIssues() {
-      if(typeof window.ethereum !== "undefined") {
+      setIssues(null)
+      if (typeof window.ethereum !== "undefined") {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, provider);
+        const signer = provider.getSigner();
+
         try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            
+
+            const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
             const data = await bluecontract.getIssues();
+            console.log(data);
             setIssues(data);
-            console.log(issues);
+
+            console.log(`Stake Balance: ${stakeBalance}, Reward Balance: ${rewardBalance}`);
         } catch (error) {
-            console.log("Error: " , error)
+            console.log("Error: ", error);
         }
+        await getBalance()
       }
-      await getBalance()
     }
 
     async function tickPress(index) {
@@ -82,9 +91,10 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
-        const transaction = await bluecontract.IssueVerify(true,index+1)
+        const transaction = await bluecontract.IssueVerify(false,index+1);
         await transaction.wait();
       }
+      getIssues();
     }
 
     async function crossPress(index) {
@@ -94,9 +104,10 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
-        const transaction = await bluecontract.IssueVerify(false,index+1)
+        const transaction = await bluecontract.IssueVerify(true,index+1);
         await transaction.wait();
       }
+      getIssues();
     }
 
     return(
@@ -132,7 +143,7 @@ function IssueCard({issue,ind,tickPress,crossPress}) {
       <div>{issue.phoneno}</div>
       <div>
         <button className="tick-btn" onClick={() => tickPress(ind)}>&#10004;</button>
-        <button className="cross-btn" onClick={() => crossPress(ind)}>&#10004;</button>
+        <button className="cross-btn" onClick={() => crossPress(ind)}>&#10005;</button>
       </div>
     </div>
   )

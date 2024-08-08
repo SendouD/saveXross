@@ -13,6 +13,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
     const [addres, setAddres] = useState("karur,TN");
     const [stakeBalance, setStakeBalance ] = useState("");
     const [rewardBalance, setRewardBalance ] = useState("");
+    const [issues, setIssues] = useState([]);
 
     async function getBalance() {
       if (typeof window.ethereum !== "undefined") {
@@ -54,6 +55,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
       }
 
       getBalance();
+      setIssues([]);
   
       return () => {
         if (elementRef.current) {
@@ -61,6 +63,18 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
         }
       };
     }, []);
+
+    async function tickPress(index) {
+      if(typeof window.ethereum !== "undefined") {
+        await requestAccount();
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+        const transaction = await bluecontract.CheckAndReward(index);
+        await transaction.wait();
+      }
+    }
 
     async function settingIssue(event) {
       if(typeof window.ethereum !== "undefined") {
@@ -91,6 +105,23 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
       await getBalance();
     }
 
+    async function getIssues() {
+      setIssues([]);
+      if(typeof window.ethereum !== "undefined") {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        await requestAccount();
+        const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+        const transaction = await bluecontract.getCheckAndReward();
+        for(let i=0;i<transaction.length;i++) {
+          const transaction1 = await bluecontract.issues(transaction[i]-1);
+          console.log(transaction1);
+          setIssues((prev)=>[...prev,transaction1]);
+        }
+      }
+      await getBalance();
+    }
+
     return(
         <>
             <Header blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance}/>
@@ -113,17 +144,36 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
                     </div>
                     <input type="file" className="gore-img" accept="image/*"/>
                     <button className="submit" onClick={settingIssue}>Initiate a Rescue!</button>
+                    <button className="add-new-user" onClick={settingNewUser}>New User</button>
+                    <button className="get-sender-issues-btn" onClick={getIssues}>Get issues</button>
                   </div>
                 </div>
 
                 <div className={ (!isVisible) ? "about-right" : "about-right fade-in" }>
-                  <button className="add-new-user" onClick={settingNewUser}>New User</button>
+                  {
+                      issues &&
+                      issues.map((issue) => {
+                        return (issue.status === "pending") ? <IssueCard issue={issue} ind ={issue.Id} tickPress={tickPress}/> : null
+                      })
+                    }
                 </div>
             </div>
 
             <Footer/>
         </>
     )
+}
+
+function IssueCard({issue,ind,tickPress}) {
+
+  return(
+    <div className="issue-card">
+      <div>{issue.phoneno}</div>
+      <div>
+        <button className="tick-btn" onClick={() => tickPress(ind)}>&#10004;</button>
+      </div>
+    </div>
+  )
 }
 
 export default User
