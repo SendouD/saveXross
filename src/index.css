@@ -1,0 +1,97 @@
+body {
+    margin: 0px;
+    background-color: hsl(0, 0%, 90%);
+    overflow-x:hidden;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+input[type="text"] {
+    display: block;
+    border: none;
+    font-size: 20px;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.61);
+    border-radius: 5px;
+}
+label {
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+}
+
+input[type="radio"] {
+    
+}
+
+.form-inps {
+
+}
+
+.form-name {
+    font-size: 50px;
+    margin-bottom: 40px;
+    color: black;
+    font-weight: 500;
+}
+
+input[type="file"] {
+    margin-top: 20px;
+}
+
+.body {
+    padding: 300px 0px;
+    
+    background-image: url("./images/mainimg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.about-left, .about-right {
+    height: 500px;
+    width: 700px;
+    background-color: hsla(0, 0%, 70%, 0.575);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-left {
+    opacity: 0;
+    transform: translateX(-60%);
+    transition: all 1s ease-in;
+}
+
+.about-right {
+    opacity: 0;
+    transform: translateX(60%);
+    transition: all 1s ease-in;
+}
+
+.fade-in {
+    opacity: 4;
+    transform: translateX(0);
+}
+
+.about-left {
+
+}
+
+.main-img {
+    width: 100%;
+    height: auto;
+}
+
+.form-inps {
+    
+}
+
+.get-issues-btn {
+    
+}
