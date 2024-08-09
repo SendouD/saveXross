@@ -23,9 +23,9 @@ function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, reward
 
                     <div className="header-middle">
                         <a href="/user" className="nav-links">User</a>
-                       {(verified)?<a href="/verifier" className="nav-links" >Verifier</a>: <span className="false-nav">Verifier</span>}
+                       {(verified)?<a href="/verifier" className="nav-links" >Verifier</a>: <></>}
                         
-                       {(admined)?<a href="/admin" className="nav-links">Admin</a>:<span className="false-nav">Admin</span>} 
+                       {(admined)?<a href="/admin" className="nav-links">Admin</a>: <></>} 
                     
                     </div>
 
