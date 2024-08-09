@@ -18,7 +18,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
   const [ckowner,setOwner]=useState(false);
   const [isnewUser,setIsnewUser] = useState(true);
   const [issueBool, setIssueBool] = useState(false);
-  const regex = /^[789][0-9]{9}$/;
+  const regex = /^[6789][0-9]{9}$/;
 
   async function getBalance() {
     
