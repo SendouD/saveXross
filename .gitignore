@@ -25,9 +25,6 @@ yarn-error.log*
 node_modules
 .env
 
-# Hardhat files
-/cache
-/src/artifacts
 
 # TypeChain files
 /typechain
