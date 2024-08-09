@@ -3,8 +3,20 @@ import { ethers } from "ethers";
 import "./css/Header.css";
 import Bluexross from "../artifacts/contracts/Bluexross.sol/Bluexross.json";
 
-function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, rewardBalance }) {
+function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, rewardBalance,verified,admined }) {
+    // async function ckVerifyer() {
+    //     const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+    //     const transaction = await bluecontract.CheckverifierAccess();
+    //     console.log(transaction);
 
+        
+    // }
+    if(!verified){
+        console.log("hitt jamie")
+    }
+    else {
+        console.log("not")
+    }
     return (
         <>
             <div className="center-header">
@@ -15,8 +27,10 @@ function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, reward
 
                     <div className="header-middle">
                         <a href="/user" className="nav-links">User</a>
-                        <a href="/verifier" className="nav-links">Verifier</a>
-                        <a href="/admin" className="nav-links">Admin</a>
+                       {(verified)?<a href="/verifier" className="nav-links" >Verifier</a>: <span className="false-nav">Verifier</span>}
+                        
+                       {(admined)?<a href="/admin" className="nav-links">Admin</a>:<span className="false-nav">Admin</span>} 
+                    
                     </div>
 
                     <div className="header-right">

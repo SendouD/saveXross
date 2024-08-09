@@ -14,11 +14,15 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
     const [stakeBalance, setStakeBalance ] = useState("");
     const [rewardBalance, setRewardBalance ] = useState("");
     const [issues, setIssues] = useState([]);
-
+    const [ckverifer,setCkverifier]=useState(false);
+    const [ckowner,setOwner]=useState(false);
+ 
     async function getBalance() {
+      
       if (typeof window.ethereum !== "undefined") {
           const provider = new ethers.providers.Web3Provider(window.ethereum);
           const signer = provider.getSigner();
+          
 
           try {
               await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -37,7 +41,20 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
           }
       }
   }
-
+  async function ckVerifyer() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+    const transaction = await bluecontract.CheckverifierAccess();
+    setCkverifier(transaction) 
+}
+async function ckAdmin() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+  const transaction = await bluecontract.checkOwner();
+  setOwner(transaction);
+}
     async function requestAccount() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
     }
@@ -57,6 +74,8 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
 
       getBalance();
       setIssues([]);
+      ckVerifyer();
+      ckAdmin();
   
       return () => {
         if (elementRef.current) {
@@ -125,7 +144,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
 
     return(
         <>
-            <Header blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance}/>
+            <Header blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} verified={ckverifer} admined={ckowner}/>
 
             <div className="body">
                 <div ref={elementRef} className={ (!isVisible) ? "about-left" : "about-left fade-in" }>

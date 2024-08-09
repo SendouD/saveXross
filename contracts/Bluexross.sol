@@ -51,6 +51,14 @@ contract Bluexross is Ownable, AccessControl{
         _;
 
     }
+        function CheckverifierAccess()public view returns(bool){
+       return hasRole(VERIFIER, msg.sender);
+    }
+    function checkOwner() public view returns(bool){
+        return msg.sender==owner();
+    }
+    
+    
     function newUser()public{
         require(UserList[msg.sender]==false,"You are already a user ;[[");
         UserList[msg.sender]=true;

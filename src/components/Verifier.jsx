@@ -11,6 +11,8 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
     const [issues, setIssues] = useState(null);
     const [stakeBalance, setStakeBalance ] = useState("");
     const [rewardBalance, setRewardBalance ] = useState("");
+    const [ckowner,setOwner]=useState(false);
+
 
     async function getBalance() {
       if (typeof window.ethereum !== "undefined") {
@@ -38,6 +40,13 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
     async function requestAccount() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
     }
+    async function ckAdmin() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+      const transaction = await bluecontract.checkOwner();
+      setOwner(transaction);
+    }
   
     useEffect(() => {
       const observer = new IntersectionObserver(
@@ -52,6 +61,7 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
       }
       getBalance();
       setIssues(null);
+      ckAdmin()
       console.log(issues)
   
       return () => {
@@ -112,7 +122,7 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
 
     return(
         <>
-            <Header blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance}/>
+            <Header blueAddress = {blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} verified={true} admined={ckowner}/>
 
             <div className="body">
                 <div ref={elementRef} className={ (!isVisible) ? "about-left" : "about-left fade-in" }>
