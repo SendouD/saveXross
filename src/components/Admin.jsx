@@ -18,6 +18,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
         const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
         const transaction = await bluecontract.CheckverifierAccess();
         setCkverifier(transaction) 
+        
     }
 
     useEffect(() => {
@@ -94,7 +95,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
     return (
         <>
             <Header 
-                blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} verified={ckVerifyer} admined={true}/>
+                blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} verified={ckverifer} admined={true}/>
 
             <div className="body">
                 <div ref={elementRef} className={(!isVisible) ? "about-left" : "about-left fade-in"}>
