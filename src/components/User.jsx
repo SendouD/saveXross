@@ -185,7 +185,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
                     { (!isnewUser) ?
                       <div className="forminp">
                         <div className="form-name">Raise a Rescue!</div>
-                        <input type="text" className="phoneno-inp" placeholder="Enter your Phone No.:" onChange={(e) => setPhoneno(e.target.value)} pattern="[789][0-9]{9}"/>
+                        <input type="text" className="phoneno-inp" placeholder="Enter your Phone No.:" onChange={(e) => setPhoneno(e.target.value)} pattern="[789][0-9]{9}" required/>
                         <input type="text" className="address-inp" placeholder="Enter the Address" onChange={(e) => setAddres(e.target.value)} required/>
                         <div>
                           <input type="radio" id="rescue" name="severity" value="rescue" onClick={(e) => setInjury(e.target.value)} checked="checked"/>
