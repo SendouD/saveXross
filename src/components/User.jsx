@@ -65,7 +65,7 @@ async function ckAdmin() {
           console.log('Is intersecting:', entry.isIntersecting);
           setIsVisible(entry.isIntersecting);
         },
-        { threshold: 0.5 } 
+        { threshold: 0.1 } 
       );
   
       if (elementRef.current) {
