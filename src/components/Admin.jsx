@@ -79,7 +79,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
             try {
                 const transaction = await bluecontract.GrantVerifyAccess(address);
                 await transaction.wait();
-                console.log("Access granted successfully");
+                alert("Access granted successfully");
             } catch (error) {
                 console.error("Error granting access:", error);
             }
@@ -95,17 +95,17 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
                 blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} verified={ckverifer} admined={true}/>
 
             <div className="body">
-                <div ref={elementRef} className={(!isVisible) ? "about-left" : "about-left fade-in"}>
-                    <input
-                        type="text"
-                        placeholder="Enter address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                    />
-                    <button className="verifier-access-btn" onClick={giveAccess}>Give Access</button>
-                </div>
-
-                <div className={(!isVisible) ? "about-right" : "about-right fade-in"}>
+                <div ref={elementRef} className={(!isVisible) ? "about-left refe" : "about-left fade-in refe"}>
+                    <div>
+                        <div className="form-name goof">Admin Portal</div>
+                        <input
+                            type="text"
+                            placeholder="Enter address"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                        />
+                        <button className="verifier-access-btn submit" onClick={giveAccess}>Give Access</button>
+                    </div>
                 </div>
             </div>
 

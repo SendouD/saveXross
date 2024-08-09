@@ -17,6 +17,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
   const [ckverifer,setCkverifier]=useState(false);
   const [ckowner,setOwner]=useState(false);
   const [isnewUser,setIsnewUser] = useState(true);
+  const [issueBool, setIssueBool] = useState(false);
 
   async function getBalance() {
     
@@ -39,6 +40,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
         }
     }
     checkNewUser();
+    console.log(stakeBalance)
 }
 
   async function checkNewUser() {
@@ -100,8 +102,16 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
-        const transaction = await bluecontract.CheckAndReward(index);
-        await transaction.wait();
+        try{
+          const transaction = await bluecontract.CheckAndReward(index);
+          await transaction.wait();
+          alert("[Stake Coins reverted: 5]   [Reward Coins: 2]");
+        }
+        catch(error) {
+          alert("Still Pending!")
+        }
+
+        getIssues();
       }
     }
 
@@ -113,9 +123,14 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
         const signer = provider.getSigner();
         const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
         const stakecontract = new ethers.Contract(stakeAddress, StakeTokens.abi, signer);
-        await stakecontract.approve(blueAddress,5);
-        const transaction = await bluecontract.IssueRescue(injury,phoneno,addres);
-        await transaction.wait();
+        try{
+          await stakecontract.approve(blueAddress,5);
+          const transaction = await bluecontract.IssueRescue(injury,phoneno,addres);
+          await transaction.wait();
+        }
+        catch(error) {
+          alert("Not enough Stake coins!");
+        }
       }
       await getBalance();
     }
@@ -135,6 +150,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
     }
 
     async function getIssues() {
+      setIssueBool(false);
       setIssues([]);
       if(typeof window.ethereum !== "undefined") {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -148,6 +164,15 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
         }
       }
       await getBalance();
+      boolIssues();
+    }
+
+    function boolIssues() {
+      issues.map((issue)=> {
+        if(issue.status === "pending"){
+          setIssueBool(true);
+        }
+      })
     }
 
     return(
@@ -158,7 +183,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
                 <div ref={elementRef} className={ (!isVisible) ? "about-left" : "about-left fade-in" }>
                   <div className="form-inps">
                     { (!isnewUser) ?
-                      <div>
+                      <div className="forminp">
                         <div className="form-name">Raise a Rescue!</div>
                         <input type="text" className="phoneno-inp" placeholder="Enter your Phone No.:" onChange={(e) => setPhoneno(e.target.value)}/>
                         <input type="text" className="address-inp" placeholder="Enter the Address" onChange={(e) => setAddres(e.target.value)}/>
@@ -182,12 +207,14 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
                 </div>
 
                 <div className={ (!isVisible) ? "about-right" : "about-right fade-in" }>
-                  {
-                    (issues.length === 0) ? <div className="no-issues">No Issues</div> :
-                    issues.map((issue) => {
-                      return (issue.status === "pending") ? <IssueCard issue={issue} ind ={issue.Id} tickPress={tickPress}/> : null
-                    })
-                  }
+                  <div>
+                    {
+                      (issues.length === 0) ? <div className="no-issues">No Issues</div> :
+                      issues.map((issue) => {
+                        return (issue.status === "pending") ? <IssueCard issue={issue} ind ={issue.Id} tickPress={tickPress}/> : null
+                      })
+                    }
+                  </div>
                 </div>
             </div>
 
@@ -198,11 +225,18 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
 
 function IssueCard({issue,ind,tickPress}) {
 
+  console.log(issue);
+
   return(
     <div className="issue-card">
-      <div>{issue.phoneno}</div>
       <div>
-        <button className="tick-btn" onClick={() => tickPress(ind)}>&#10004;</button>
+        <div><span className="ban">ID: </span> {Number(issue.Id)}</div>
+        <div><span className="ban">User: </span> {issue.user}</div>
+        <div><span className="ban">Address: </span> {issue.addres}</div>
+        <div><span className="ban">Phone No.: </span> {issue.phoneno}</div>
+      </div>
+      <div>
+        <button className="tick-btn submit" onClick={() => tickPress(ind)}>&#10004;</button>
       </div>
     </div>
   )

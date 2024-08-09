@@ -12,16 +12,22 @@ input[type="text"] {
     font-size: 20px;
     padding: 10px;
     margin-bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.61);
+    background-color: hsl(71, 20%, 68%);
     border-radius: 5px;
+    color: hsl(71, 20%, 28%);
 }
+
+::placeholder {
+    color: hsl(71, 20%, 28%);
+}
+
 label {
     font-size: 20px;
     color: rgb(0, 0, 0);
 }
 
 input[type="radio"] {
-    
+    color: hsl(71, 20%, 28%);
 }
 
 .form-inps {
@@ -33,6 +39,7 @@ input[type="radio"] {
     margin-bottom: 40px;
     color: black;
     font-weight: 500;
+    color: hsl(71, 20%, 28%);
 }
 
 input[type="file"] {
@@ -42,7 +49,7 @@ input[type="file"] {
 .body {
     padding: 300px 0px;
     
-    background-image: url("./images/mainimg.jpg");
+    background-image: url("./images/8.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -55,11 +62,12 @@ input[type="file"] {
 .about-left, .about-right {
     height: 500px;
     width: 700px;
-    background-color: hsla(0, 0%, 70%, 0.575);
+    background-color: hsla(71, 20%, 73%, 0.623);
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px;
 }
 
 .about-left {
@@ -67,6 +75,14 @@ input[type="file"] {
     transform: translateX(-60%);
     transition: all 1s ease-in;
 }
+
+input , label {
+    color: hsl(71, 20%, 28%);
+}
+
+.forminp {
+    color: hsl(71, 20%, 38%);
+}  
 
 .about-right {
     justify-content: center;
@@ -103,9 +119,11 @@ input[type="file"] {
     justify-content: space-around;
     align-items: center;
     width: 600px;
-    height: 50px;
     background-color: rgba(255, 255, 255, 0.623);
     margin: 10px 0px;
+    padding: 20px;
+    border-radius: 15px;
+    background-color: hsl(71, 20%, 58%);
 }
 
 .no-issues {
@@ -116,5 +134,77 @@ input[type="file"] {
     align-items: center;
     font-size: 50px;
     font-weight: bold;
-    color: hsl(0, 0%, 80%);
+    color: hsl(71, 20%, 38%);
 }
+
+.floating-action-button {
+    background-color: #284b63;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.floating-action-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.5);
+}
+
+.get-sender-issues-btn {
+    margin-left: 40px;
+}
+
+.add-new-user, .submit, .get-sender-issues-btn {
+    border: none;
+    font-size: 40px;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: hsl(60, 30%, 90%);
+    color: hsl(71, 20%, 38%);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.submit, .get-sender-issues-btn {
+    font-size: 20px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.add-new-user:hover , .submit:hover, .get-sender-issues-btn:hover {
+    background-color: hsl(71, 20%, 38%);
+    color: hsl(60, 30%, 90%);
+    box-shadow: 4px 4px 2px hsl(71, 20%, 58%);
+}
+
+.verifier-access-btn {
+    margin: 0px;
+    padding: 13px;
+}
+
+.refe {
+    
+}
+
+.goof {
+    margin-top: -100px;
+}
+
+.ban {
+    font-size: 20px;
+}
+
+.tick-btn,.cross-btn {
+    padding: 14px;
+    margin-left: 20px;
+}
+
+.arcs {
+    text-align: center;
+}
+
+/* #e0e0c5 */

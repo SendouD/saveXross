@@ -122,16 +122,22 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
 
             <div className="body">
                 <div ref={elementRef} className={ (!isVisible) ? "about-left" : "about-left fade-in" }>
-                    <button className="get-issues-btn" onClick={getIssues}>Get Issues</button>
+                  <div className="arcs">
+                    <div className="form-name goof">Verify Portal</div>
+                    <button className="get-issues-btn submit" onClick={getIssues}>Get Issues</button>
+                  </div>
                 </div>
 
                 <div className={ (!isVisible) ? "about-right" : "about-right fade-in" }>
+                  <div>
                     {
-                      (issues && issues.length !== 0) ?
+                      (issues == null || issues.length === 0) ? <div className="no-issues">No Issues</div> :
                       issues.map((issue,i) => {
                         return (issue.status === "pending") ? <IssueCard issue={issue} ind ={i} tickPress={tickPress} crossPress={crossPress}/> : <></>
-                      }) : <div className="no-issues">No Issues</div> 
+                      }) 
                     }
+                  </div>
+
                 </div>
             </div> 
 
@@ -144,10 +150,15 @@ function IssueCard({issue,ind,tickPress,crossPress}) {
 
   return(
     <div className="issue-card">
-      <div>{issue.phoneno}</div>
       <div>
-        <button className="tick-btn" onClick={() => tickPress(ind)}>&#10004;</button>
-        <button className="cross-btn" onClick={() => crossPress(ind)}>&#10005;</button>
+        <div><span className="ban">ID: </span> {Number(issue.Id)}</div>
+        <div><span className="ban">User: </span> {issue.user}</div>
+        <div><span className="ban">Address: </span> {issue.addres}</div>
+        <div><span className="ban">Phone No.: </span> {issue.phoneno}</div>
+      </div>
+      <div>
+        <button className="tick-btn submit" onClick={() => tickPress(ind)}>&#10004;</button>
+        <button className="cross-btn submit" onClick={() => crossPress(ind)}>&#10005;</button>
       </div>
     </div>
   )

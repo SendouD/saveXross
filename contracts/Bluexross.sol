@@ -10,8 +10,8 @@ import "hardhat/console.sol";
 contract Bluexross is Ownable, AccessControl{
     
     constructor() Ownable(msg.sender){
-           IssuestoTime["rescue"]=1 minutes;   
-           IssuestoTime["injury"]=2 minutes;
+           IssuestoTime["rescue"]=30 seconds;   
+           IssuestoTime["injury"]= 2 minutes;
            IssuestoTime["accident"]=3 minutes;
            IssuestoTime["animalabuse"]=4 minutes;         
     }
@@ -62,7 +62,7 @@ contract Bluexross is Ownable, AccessControl{
     function newUser()public{
         require(UserList[msg.sender]==false,"You are already a user ;[[");
         UserList[msg.sender]=true;
-        StakeToken.mint(msg.sender, 5);
+        StakeToken.mint(msg.sender, 10);
         emit newuser(msg.sender);
     }
     function getstakebalance()public view returns(uint256) {
@@ -157,7 +157,7 @@ contract Bluexross is Ownable, AccessControl{
         }
         else{
             issues[id-1].rewardstatus="pending";
-            emit Status(issues[id-1].status,issues[id-1].rewardstatus);
+            revert("Status Pending!");
         }
     }
 
