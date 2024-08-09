@@ -18,6 +18,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
   const [ckowner,setOwner]=useState(false);
   const [isnewUser,setIsnewUser] = useState(true);
   const [issueBool, setIssueBool] = useState(false);
+  const regex = /^[789][0-9]{9}$/;
 
   async function getBalance() {
     
@@ -116,7 +117,10 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
     }
 
     async function settingIssue(event) {
-      if(typeof window.ethereum !== "undefined") {
+      if(!regex.test(phoneno) && addres.length >= 8) {
+        alert("Enter a valid Phone No.: / Address");
+      }
+      else if(typeof window.ethereum !== "undefined") {
         await requestAccount();
 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
