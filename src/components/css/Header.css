@@ -10,10 +10,15 @@
     font-size: 25px;
     font-weight: lighter;
     transition: color 0.2s ease;
+    margin-left: 125px;
 }
 
 .nav-links:hover {
-    color: hsl(60, 30%, 33%);;
+    color: hsl(60, 30%, 33%);
+}
+
+.baba {
+    margin: 0px;
 }
 
 .rescue-btn {
@@ -50,8 +55,8 @@
 
 .header-middle {
     display: flex;
-    justify-content: space-between;
-    min-width: 300px;
+    justify-content: center;
+    align-items: center;
 }
 
 .logo-name {
@@ -75,7 +80,7 @@
     text-decoration: line-through;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: hsl(60, 30%, 83%);;
+    color: hsl(60, 30%, 83%);
 }
 
 .false-nav:hover {

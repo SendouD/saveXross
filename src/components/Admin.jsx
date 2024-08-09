@@ -1,6 +1,7 @@
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 import Bluexross from "../artifacts/contracts/Bluexross.sol/Bluexross.json";
 
@@ -11,6 +12,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
     const [stakeBalance, setStakeBalance] = useState("");
     const [rewardBalance, setRewardBalance] = useState("");
     const [ckverifer,setCkverifier]=useState(false);
+    const navigate = useNavigate();
 
     async function ckVerifyer() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -21,9 +23,17 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
         
     }
 
+    function handleAccountChange() {
+        navigate("/user");
+    }
+
     useEffect(() => {
         getBalance();
         ckVerifyer();
+
+        if (window.ethereum) {
+            window.ethereum.on("accountsChanged", handleAccountChange);
+        }
     }, []);
 
     async function getBalance() {

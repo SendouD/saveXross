@@ -88,6 +88,10 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
       ckVerifyer();
       ckAdmin();
       checkNewUser();
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", () => {window.location.reload()});
+    }
   
       return () => {
         if (elementRef.current) {
