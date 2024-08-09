@@ -8,9 +8,9 @@ import StakeTokens from "../artifacts/contracts/stakecoin.sol/StakeTokens.json"
 function User({blueAddress, stakeAddress, rewardAddress}) {
   const elementRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [injury, setInjury] = useState("rescue");
-  const [phoneno, setPhoneno] = useState("9999999999");
-  const [addres, setAddres] = useState("karur,TN");
+  const [injury, setInjury] = useState("");
+  const [phoneno, setPhoneno] = useState("");
+  const [addres, setAddres] = useState("");
   const [stakeBalance, setStakeBalance ] = useState("");
   const [rewardBalance, setRewardBalance ] = useState("");
   const [issues, setIssues] = useState([]);
@@ -185,10 +185,10 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
                     { (!isnewUser) ?
                       <div className="forminp">
                         <div className="form-name">Raise a Rescue!</div>
-                        <input type="text" className="phoneno-inp" placeholder="Enter your Phone No.:" onChange={(e) => setPhoneno(e.target.value)}/>
-                        <input type="text" className="address-inp" placeholder="Enter the Address" onChange={(e) => setAddres(e.target.value)}/>
+                        <input type="text" className="phoneno-inp" placeholder="Enter your Phone No.:" onChange={(e) => setPhoneno(e.target.value)} pattern="[789][0-9]{9}"/>
+                        <input type="text" className="address-inp" placeholder="Enter the Address" onChange={(e) => setAddres(e.target.value)} required/>
                         <div>
-                          <input type="radio" id="rescue" name="severity" value="rescue" onClick={(e) => setInjury(e.target.value)}/>
+                          <input type="radio" id="rescue" name="severity" value="rescue" onClick={(e) => setInjury(e.target.value)} checked="checked"/>
                           <label for="html">Rescue</label><br/>
                           <input type="radio" id="injury" name="severity" value="injury" onClick={(e) => setInjury(e.target.value)}/>
                           <label for="css">Injury</label><br/>
