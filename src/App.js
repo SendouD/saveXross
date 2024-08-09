@@ -45,7 +45,7 @@ function App() {
         <Route path="/user" element={<User blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} />} />
         {ckverifier && <Route path="/verifier" element={<Verifier blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} />} />}
         {ckowner && <Route path="/admin" element={<Admin blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} />} />}
-        <Route path="*" element={<Navigate to="/" />} /> {/* Redirect unknown routes to home */}
+        <Route path="*" element={<Error/>} /> 
       </Routes>
     </>
   );
