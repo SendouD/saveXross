@@ -11,12 +11,6 @@ function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, reward
 
         
     // }
-    if(!verified){
-        console.log("hitt jamie")
-    }
-    else {
-        console.log("not")
-    }
     return (
         <>
             <div className="center-header">

@@ -101,6 +101,10 @@ contract Bluexross is Ownable, AccessControl{
          
         emit IssueRised(issue,time,"pending");
     }
+
+    function isNewUser() public view returns (bool) {
+        return UserList[msg.sender];
+    }
     
     function IssueVerify(bool issueDetail, uint256 id) external {
         require(hasRole(VERIFIER, msg.sender), "Caller is not a VERIFIER");

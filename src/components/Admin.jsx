@@ -23,7 +23,6 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
     useEffect(() => {
         getBalance();
         ckVerifyer();
-
     }, []);
 
     async function getBalance() {
@@ -40,8 +39,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
 
                 const rewardData = await bluecontract.getrewardbalance();
                 setRewardBalance(rewardData.toString());
-
-                console.log(`Stake Balance: ${stakeBalance}, Reward Balance: ${rewardBalance}`);
+                
             } catch (error) {
                 console.log("Error: ", error);
             }
@@ -53,7 +51,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
             ([entry]) => {
                 setIsVisible(entry.isIntersecting);
             },
-            { threshold: 0.5 }
+            { threshold: 0.1 }
         );
 
         if (elementRef.current) {
@@ -94,7 +92,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
     return (
         <>
             <Header 
-                blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} verified={ckVerifyer} admined={true}/>
+                blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} verified={ckverifer} admined={true}/>
 
             <div className="body">
                 <div ref={elementRef} className={(!isVisible) ? "about-left" : "about-left fade-in"}>
