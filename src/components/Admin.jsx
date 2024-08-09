@@ -24,7 +24,6 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
     useEffect(() => {
         getBalance();
         ckVerifyer();
-
     }, []);
 
     async function getBalance() {
@@ -41,8 +40,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
 
                 const rewardData = await bluecontract.getrewardbalance();
                 setRewardBalance(rewardData.toString());
-
-                console.log(`Stake Balance: ${stakeBalance}, Reward Balance: ${rewardBalance}`);
+                
             } catch (error) {
                 console.log("Error: ", error);
             }

@@ -72,4 +72,10 @@
     font-size: 20px;
     font-weight: lighter;
     text-decoration: line-through;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.false-nav:hover {
+    color: red;
 }

@@ -30,7 +30,6 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
               const rewardData = await bluecontract.getrewardbalance();
               setRewardBalance(rewardData.toString());
 
-              console.log(`Stake Balance: ${stakeBalance}, Reward Balance: ${rewardBalance}`);
           } catch (error) {
               console.log("Error: ", error);
           }
@@ -62,7 +61,6 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
       getBalance();
       setIssues(null);
       ckAdmin()
-      console.log(issues)
   
       return () => {
         if (elementRef.current) {
@@ -83,10 +81,8 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
 
             const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
             const data = await bluecontract.getIssues();
-            console.log(data);
             setIssues(data);
 
-            console.log(`Stake Balance: ${stakeBalance}, Reward Balance: ${rewardBalance}`);
         } catch (error) {
             console.log("Error: ", error);
         }
@@ -130,14 +126,12 @@ function Verifier({blueAddress, stakeAddress, rewardAddress}) {
                 </div>
 
                 <div className={ (!isVisible) ? "about-right" : "about-right fade-in" }>
-                  <div>
                     {
-                      issues &&
+                      (issues && issues.length !== 0) ?
                       issues.map((issue,i) => {
                         return (issue.status === "pending") ? <IssueCard issue={issue} ind ={i} tickPress={tickPress} crossPress={crossPress}/> : <></>
-                      })
+                      }) : <div className="no-issues">No Issues</div> 
                     }
-                  </div>
                 </div>
             </div> 
 
