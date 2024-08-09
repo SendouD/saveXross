@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import User from "./components/User.jsx";
 import Verifier from "./components/Verifier.jsx";
 import Admin from "./components/Admin.jsx";
+import Error from "./components/Error.jsx"
 import Bluexross from "./artifacts/contracts/Bluexross.sol/Bluexross.json";
 import StakeTokens from "./artifacts/contracts/stakecoin.sol/StakeTokens.json";
 
