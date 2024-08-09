@@ -8,9 +8,9 @@ import Error from "./components/Error.jsx"
 import Bluexross from "./artifacts/contracts/Bluexross.sol/Bluexross.json";
 import StakeTokens from "./artifacts/contracts/stakecoin.sol/StakeTokens.json";
 
-const blueAddress = "0x40fC681E876a143Ec7358E74f75a9ED717B1fec1";
-const stakeAddress = "0xB961fAc6a3Ae50661C8288dC3a5B5D5903CfD41B";
-const rewardAddress = "0x9F16BE65Afb4a2Bb16EDCbA788708D590aA9cfa2";
+const blueAddress = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
+const stakeAddress = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853";
+const rewardAddress = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6";
 
 function App() {
   const [ckverifier, setCkverifier] = useState(false);
