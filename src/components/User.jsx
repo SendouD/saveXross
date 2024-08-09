@@ -133,7 +133,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
           await transaction.wait();
         }
         catch(error) {
-          alert("Not enough Stake coins!");
+          alert("Not enough Stakeing coins!");
         }
       }
       await getBalance();
