@@ -117,7 +117,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
     }
 
     async function settingIssue(event) {
-      if(!regex.test(phoneno) && addres.length >= 8) {
+      if(!regex.test(phoneno) || addres.length >= 8) {
         alert("Enter a valid Phone No.: / Address");
       }
       else if(typeof window.ethereum !== "undefined") {
