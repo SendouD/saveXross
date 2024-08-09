@@ -66,3 +66,10 @@
     display: flex;
     align-items: center;
 }
+
+.false-nav {
+    color: black;
+    font-size: 20px;
+    font-weight: lighter;
+    text-decoration: line-through;
+}

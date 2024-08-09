@@ -10,9 +10,20 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
     const [address, setAddress] = useState("");
     const [stakeBalance, setStakeBalance] = useState("");
     const [rewardBalance, setRewardBalance] = useState("");
+    const [ckverifer,setCkverifier]=useState(false);
+
+    async function ckVerifyer() {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+        const transaction = await bluecontract.CheckverifierAccess();
+        setCkverifier(transaction) 
+    }
 
     useEffect(() => {
         getBalance();
+        ckVerifyer();
+
     }, []);
 
     async function getBalance() {
@@ -83,7 +94,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
     return (
         <>
             <Header 
-                blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} />
+                blueAddress={blueAddress} stakeAddress={stakeAddress} rewardAddress={rewardAddress} stakeBalance={stakeBalance} rewardBalance={rewardBalance} verified={ckVerifyer} admined={true}/>
 
             <div className="body">
                 <div ref={elementRef} className={(!isVisible) ? "about-left" : "about-left fade-in"}>
