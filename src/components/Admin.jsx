@@ -18,6 +18,7 @@ function Admin({ blueAddress, stakeAddress, rewardAddress }) {
         const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
         const transaction = await bluecontract.CheckverifierAccess();
         setCkverifier(transaction) 
+        
     }
 
     useEffect(() => {
