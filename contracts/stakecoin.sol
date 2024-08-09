@@ -9,11 +9,9 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 
 contract StakeTokens is ERC20, ERC20Burnable, Ownable,AccessControl {
-    constructor()
-        ERC20("StakeTokens", "STK")
-        Ownable(msg.sender)
+    constructor() ERC20("StakeTokens", "STK") Ownable(msg.sender) {
         
-    {}
+    }
         bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
         function GrantMinterAccess(address minter) public onlyOwner{
       

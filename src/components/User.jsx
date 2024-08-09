@@ -48,7 +48,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
           console.log('Is intersecting:', entry.isIntersecting);
           setIsVisible(entry.isIntersecting);
         },
-        { threshold: 0.1 } 
+        { threshold: 0.5 } 
       );
   
       if (elementRef.current) {
