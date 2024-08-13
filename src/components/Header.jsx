@@ -12,6 +12,19 @@ function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, reward
 
         
     // }
+
+    useEffect(() => {
+        
+    },[])
+
+    async function getAdd() {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const temp = await signer.getAddress();
+        setAdd(temp);
+        console.log(add);
+    }
     
     return (
         <>
@@ -28,7 +41,11 @@ function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, reward
                     </div>
 
                     <div className="header-right">
-                        {/* <button className="rescue-btn">Raise a Rescue!</button> */}
+                        {
+                            (add === "") ?
+                            <button className="connect-btn" onClick={getAdd}>Connect</button> :
+                            <span className="user-add">{add}</span>
+                        }
                         <div>
                             <div>Stake coins: {stakeBalance} &#129689;</div>
                             <div>Reward coins: {rewardBalance} &#129689;</div>

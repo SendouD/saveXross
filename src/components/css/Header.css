@@ -21,7 +21,7 @@
     margin: 0px;
 }
 
-.rescue-btn {
+.connect-btn {
     border: none;
     background-color: hsla(45, 95%, 54%, 0.922);
     font-size: 20px;
@@ -34,7 +34,7 @@
     margin-right: 20px;
 }
 
-.rescue-btn:hover {
+.connect-btn:hover {
     background-color: hsla(45, 95%, 44%, 0.922);
 }
 
@@ -85,4 +85,18 @@
 
 .false-nav:hover {
     color: red;
+}
+
+.user-add {
+    width: 8vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 50px;
+    background-color: hsl(60, 30%, 83%);
+    color: black;
+    padding: 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-wrap: wrap;
 }

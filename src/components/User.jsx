@@ -41,35 +41,35 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
         }
     }
     checkNewUser();
-    console.log(stakeBalance)
-}
-
-  async function checkNewUser() {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
-    const data = await bluecontract.isNewUser();
-    setIsnewUser(!data);
+    
   }
 
-  async function ckVerifyer() {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
-    const transaction = await bluecontract.CheckverifierAccess();
-    setCkverifier(transaction) 
-  }
+    async function checkNewUser() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+      const data = await bluecontract.isNewUser();
+      setIsnewUser(!data);
+    }
 
-  async function ckAdmin() {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
-    const transaction = await bluecontract.checkOwner();
-    setOwner(transaction);
-  }
-  async function requestAccount() {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
-  }
+    async function ckVerifyer() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+      const transaction = await bluecontract.CheckverifierAccess();
+      setCkverifier(transaction) 
+    }
+
+    async function ckAdmin() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+      const transaction = await bluecontract.checkOwner();
+      setOwner(transaction);
+    }
+    async function requestAccount() {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+    }
 
     useEffect(() => {
       const observer = new IntersectionObserver(
@@ -121,7 +121,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
     }
 
     async function settingIssue(event) {
-      if(!regex.test(phoneno) || addres.length >= 8) {
+      if(!regex.test(phoneno) || addres.length < 8) {
         alert("Enter a valid Phone No.: / Address");
       }
       else if(typeof window.ethereum !== "undefined") {
@@ -232,8 +232,6 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
 }
 
 function IssueCard({issue,ind,tickPress}) {
-
-  console.log(issue);
 
   return(
     <div className="issue-card">
