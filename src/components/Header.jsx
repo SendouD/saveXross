@@ -14,16 +14,20 @@ function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, reward
     // }
 
     useEffect(() => {
-        
+        getAdd();
     },[])
 
     async function getAdd() {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const temp = await signer.getAddress();
-        setAdd(temp);
-        console.log(add);
+        try{
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const temp = await signer.getAddress();
+            setAdd(temp);
+        }
+        catch(err) {
+            alert("Check if u are logged into your wallet!!");
+        }
     }
     
     return (
@@ -42,9 +46,9 @@ function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, reward
 
                     <div className="header-right">
                         {
-                            (add === "") ?
-                            <button className="connect-btn" onClick={getAdd}>Connect</button> :
-                            <span className="user-add">{add}</span>
+                            // (add === "") ?
+                            // <button className="connect-btn" onClick={getAdd}>Connect</button> :
+                            <span className="user-add">Acc:{add}</span>
                         }
                         <div>
                             <div>Stake coins: {stakeBalance} &#129689;</div>

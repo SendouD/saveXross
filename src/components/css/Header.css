@@ -10,7 +10,7 @@
     font-size: 25px;
     font-weight: lighter;
     transition: color 0.2s ease;
-    margin-left: 125px;
+    margin-left: 100px;
 }
 
 .nav-links:hover {
@@ -96,7 +96,13 @@
     background-color: hsl(60, 30%, 83%);
     color: black;
     padding: 15px;
-    border-radius: 20px;
+    border-radius: 15px;
     font-weight: bold;
     text-wrap: wrap;
+    animation: all 0.3s ease;
+    cursor: pointer;
+}
+
+.user-add:hover {
+    box-shadow: 3px 3px 2px hsl(60, 30%, 43%);
 }

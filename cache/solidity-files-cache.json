@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\veeru\\Desktop\\web3-hackathon\\contracts\\Bluexross.sol": {
-      "lastModificationDate": 1723220463234,
-      "contentHash": "5def1ef9877b68e55fc4c8028e8b82b2",
+      "lastModificationDate": 1723555206691,
+      "contentHash": "9037b6a38e29a8b649a04500a7031570",
       "sourceName": "contracts/Bluexross.sol",
       "solcConfig": {
         "version": "0.8.24",

@@ -124,20 +124,22 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
       if(!regex.test(phoneno) || addres.length < 8) {
         alert("Enter a valid Phone No.: / Address");
       }
-      else if(typeof window.ethereum !== "undefined") {
-        await requestAccount();
+      else{
+        if(typeof window.ethereum !== "undefined") {
+          await requestAccount();
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
-        const stakecontract = new ethers.Contract(stakeAddress, StakeTokens.abi, signer);
-        try{
-          await stakecontract.approve(blueAddress,5);
-          const transaction = await bluecontract.IssueRescue(injury,phoneno,addres);
-          await transaction.wait();
-        }
-        catch(error) {
-          alert("Not enough Stakeing coins!");
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
+          const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+          const stakecontract = new ethers.Contract(stakeAddress, StakeTokens.abi, signer);
+          try{
+            await stakecontract.approve(blueAddress,5);
+            const transaction = await bluecontract.IssueRescue(injury,phoneno,addres);
+            await transaction.wait();
+          }
+          catch(error) {
+            alert("Not enough Stakeing coins!");
+          }
         }
       }
       await getBalance();

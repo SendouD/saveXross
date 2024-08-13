@@ -10,7 +10,7 @@ import "hardhat/console.sol";
 contract Bluexross is Ownable, AccessControl{
     
     constructor() Ownable(msg.sender){
-           IssuestoTime["rescue"]=30 seconds;   
+           IssuestoTime["rescue"]= 30 seconds;   
            IssuestoTime["injury"]= 2 minutes;
            IssuestoTime["accident"]=3 minutes;
            IssuestoTime["animalabuse"]=4 minutes;         
