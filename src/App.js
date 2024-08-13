@@ -40,7 +40,9 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <><div>Loading...</div> 
+    <br /> 
+    <p> Pro Tip : Change to Sepolia Network And Reload :]]</p></> ;
   }
 
   return (
