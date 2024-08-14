@@ -39,11 +39,11 @@ function App() {
     fetchRoles();
   }, []);
 
-  if (loading) {
-    return <><div>Loading...</div> 
-    <br /> 
-    <p> Pro Tip : Change to Sepolia Network And Reload :]]</p></> ;
-  }
+  // if (loading) {
+  //   return <><div>Loading...</div> 
+  //   <br /> 
+  //   <p> Pro Tip : Change to Sepolia Network And Reload :]]</p></> ;
+  // }
 
   return (
     <>

@@ -37,7 +37,7 @@ contract Bluexross is Ownable, AccessControl{
     mapping (string=>uint8) private IssuestoTime;
     mapping (address=>bool) private UserList;
     mapping (address=>uint256[]) private AddresstoIds;
-   
+
     StakeTokens StakeToken;
     RewardTokens RewardToken;
     uint256 private stakeprice=5;

@@ -90,6 +90,7 @@ input , label {
     opacity: 0;
     transform: translateX(60%);
     transition: all 1s ease-in;
+    overflow: auto;
 }
 
 .fade-in {
