@@ -211,7 +211,7 @@ function User({blueAddress, stakeAddress, rewardAddress}) {
                         <button className="submit" onClick={settingIssue}>Initiate a Rescue!</button>
                         <button className="get-sender-issues-btn" onClick={getIssues}>Get issues</button>
                       </div> :
-                      <button className="add-new-user" onClick={settingNewUser}>New User</button>
+                      <button className="add-new-user" onClick={settingNewUser}>New User(use Sepholia)</button>
                     }
                   </div>
                 </div>
