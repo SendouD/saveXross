@@ -1,166 +1,167 @@
 // SPDX-License-Identifier: MIT
-// Compatible with OpenZeppelin Contracts ^5.0.0
 pragma solidity ^0.8.20;
+
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
- import "./stakecoin.sol";
+import "./stakecoin.sol";
 import "./rewardcoin.sol";
 import "hardhat/console.sol";
-contract Bluexross is Ownable, AccessControl{
+
+contract Bluexross is Ownable, AccessControl {
     
-    constructor() Ownable(msg.sender){
-           IssuestoTime["rescue"]= 30 seconds;   
-           IssuestoTime["injury"]= 2 minutes;
-           IssuestoTime["accident"]=3 minutes;
-           IssuestoTime["animalabuse"]=4 minutes;         
+    constructor() Ownable(msg.sender) {
+        IssuestoTime[RescueType.RESCUE] = 30 seconds;
+        IssuestoTime[RescueType.INJURY] = 2 minutes;
+        IssuestoTime[RescueType.ACCIDENT] = 3 minutes;
+        IssuestoTime[RescueType.ANIMAL_ABUSE] = 4 minutes;
     }
-    
+
     bytes32 public constant VERIFIER = keccak256("VERIFIER");
 
-    struct Issue{
+    enum Status { PENDING, COMPLETED, FAKE, UNATTENDED }
+    enum RewardStatus { PENDING, SUCCESSFUL, STAKE_LOST }
+    enum RescueType { RESCUE, INJURY, ACCIDENT, ANIMAL_ABUSE }
+
+    struct Issue {
         address user;
-        uint256 Id;
+        uint256 id;
         string phoneno;
         string addres;
-        bool fakeissue;
+        bool fakeIssue;
         uint256 time;
         uint256 timestamp;
-        string status;
-        string rewardstatus;
+        Status status;
+        RewardStatus rewardStatus;
     }
+
     Issue[] public issues;
 
-    event IssueRised(Issue _issue,uint256 Time,string status);
-    event newuser(address indexed _user);
-    event Status(string status,string Rewardstatus);
-    mapping (string=>uint8) private IssuestoTime;
-    mapping (address=>bool) private UserList;
-    mapping (address=>uint256[]) private AddresstoIds;
+    event IssueRised(Issue _issue, uint256 Time, Status status);
+    event NewUser(address indexed _user);
+    event StatusUpdated(Status status, RewardStatus rewardStatus);
 
-    StakeTokens StakeToken;
-    RewardTokens RewardToken;
-    uint256 private stakeprice=5;
+    mapping(RescueType => uint256) private IssuestoTime;
+    mapping(address => bool) private userList;
+    mapping(address => uint256[]) private addressToIds;
 
+    StakeTokens public stakeToken;
+    RewardTokens public rewardToken;
 
-    modifier stakecoins(){
+    uint256 private constant stakePrice = 5;
+
+    modifier stakeCoins() {
         console.log(msg.sender);
         console.log(address(this));
-        StakeToken.approve(address(this), 5);
-        require(StakeToken.transferFrom(msg.sender,address(this), stakeprice),"YOU DON'T HAVE ENOUGH STAKE COINS");
+        stakeToken.approve(address(this), stakePrice);
+        require(stakeToken.transferFrom(msg.sender, address(this), stakePrice), "YOU DON'T HAVE ENOUGH STAKE COINS");
         _;
+    }
 
+    function checkVerifierAccess() public view returns (bool) {
+        return hasRole(VERIFIER, msg.sender);
     }
-        function CheckverifierAccess()public view returns(bool){
-       return hasRole(VERIFIER, msg.sender);
+
+    function checkOwner() public view returns (bool) {
+        return msg.sender == owner();
     }
-    function checkOwner() public view returns(bool){
-        return msg.sender==owner();
+
+    function newUser() public {
+        require(!userList[msg.sender], "You are already a user ;[[");
+        userList[msg.sender] = true;
+        stakeToken.mint(msg.sender, 10);
+        emit NewUser(msg.sender);
     }
-    
-    
-    function newUser()public{
-        require(UserList[msg.sender]==false,"You are already a user ;[[");
-        UserList[msg.sender]=true;
-        StakeToken.mint(msg.sender, 10);
-        emit newuser(msg.sender);
+
+    function getStakeBalance() public view returns (uint256) {
+        return stakeToken.balanceOf(msg.sender);
     }
-    function getstakebalance()public view returns(uint256) {
-        console.log(msg.sender);
-        return StakeToken.balanceOf(msg.sender);
+
+    function getRewardBalance() public view returns (uint256) {
+        return rewardToken.balanceOf(msg.sender);
     }
-      function getrewardbalance()public view returns(uint256) {
-        return RewardToken.balanceOf(msg.sender);
+
+    function grantVerifierAccess(address verifier) public onlyOwner {
+        _grantRole(VERIFIER, verifier);
     }
-    
-    function GrantVerifyAccess(address _Verifier) public onlyOwner{
-        _grantRole(VERIFIER, _Verifier);
+
+    function initializeCoins(StakeTokens _stakeTokens, RewardTokens _rewardTokens) public onlyOwner {
+        stakeToken = _stakeTokens;
+        rewardToken = _rewardTokens;
     }
-    function InitialiseCoins(StakeTokens _stakecoins,RewardTokens _rewardcoins)public onlyOwner{
-        StakeToken=_stakecoins;
-        RewardToken=_rewardcoins;
-    }
-    function IssueRescue(string memory rescuetype,string memory phoneNo,string memory addres)public stakecoins {
-       
-        uint256 time=IssuestoTime[rescuetype];
-        console.log(issues.length);
+
+    function issueRescue(RescueType rescueType, string memory phoneNo, string memory addres) public stakeCoins {
+        uint256 time = IssuestoTime[rescueType];
         Issue memory issue = Issue({
             user: msg.sender,
-            Id: issues.length+1,
+            id: issues.length + 1,
             phoneno: phoneNo,
             addres: addres,
-            fakeissue: false,
+            fakeIssue: false,
             time: time,
             timestamp: block.timestamp,
-            status: "pending",
-            rewardstatus:"pending"
+            status: Status.PENDING,
+            rewardStatus: RewardStatus.PENDING
         });
-        AddresstoIds[msg.sender].push(issues.length+1);
 
+        addressToIds[msg.sender].push(issues.length + 1);
         issues.push(issue);
-         
-        emit IssueRised(issue,time,"pending");
+
+        emit IssueRised(issue, time, Status.PENDING);
     }
 
     function isNewUser() public view returns (bool) {
-        return UserList[msg.sender];
+        return userList[msg.sender];
     }
-    
-    function IssueVerify(bool issueDetail, uint256 id) external {
+
+    function issueVerify(bool issueDetail, uint256 id) external {
         require(hasRole(VERIFIER, msg.sender), "Caller is not a VERIFIER");
         require(id <= issues.length, "Invalid issue ID");
 
-        require(keccak256(bytes(issues[id-1].status)) == keccak256(bytes("pending")), "Issue already verified");
+        Issue storage issue = issues[id - 1];
+        require(issue.status == Status.PENDING, "Issue already verified");
 
-        issues[id-1].fakeissue = issueDetail;
+        issue.fakeIssue = issueDetail;
         if (!issueDetail) {
-            issues[id-1].status = "completed";
-
-            RewardForRescue(issues[id-1].user);
-            issues[id-1].rewardstatus="Reward successfull";
-            emit Status(issues[id-1].status,issues[id-1].rewardstatus);
+            issue.status = Status.COMPLETED;
+            rewardForRescue(issue.user);
+            issue.rewardStatus = RewardStatus.SUCCESSFUL;
+        } else {
+            issue.status = Status.FAKE;
+            issue.rewardStatus = RewardStatus.STAKE_LOST;
         }
-        else{
-            issues[id-1].status="fake issue";
-            issues[id-1].rewardstatus="stake coin is gone :]] ";
 
-            emit Status(issues[id-1].status,issues[id-1].rewardstatus);
-
-        }
+        emit StatusUpdated(issue.status, issue.rewardStatus);
     }
 
-    function getIssues() public view returns(Issue[] memory) {
+    function getIssues() public view returns (Issue[] memory) {
         require(hasRole(VERIFIER, msg.sender), "Caller is not a VERIFIER");
         return issues;
     }
-   
-    function RewardForRescue(address _user)private {
-        StakeToken.transfer(_user,5);
-        RewardToken.mint(_user, 2);
+
+    function rewardForRescue(address user) private {
+        stakeToken.transfer(user, 5);
+        rewardToken.mint(user, 2);
     }
 
     function getCheckAndReward() public view returns (uint256[] memory) {
-        return AddresstoIds[msg.sender];
+        return addressToIds[msg.sender];
     }
 
-    function CheckAndReward(uint256 id) public {
+    function checkAndReward(uint256 id) public {
         require(id <= issues.length, "Invalid issue ID");
 
-        require(issues[id-1].user == msg.sender, "You are not the owner of the issue!");
+        Issue storage issue = issues[id - 1];
+        require(issue.user == msg.sender, "You are not the owner of the issue!");
 
-        if (block.timestamp > issues[id-1].timestamp + issues[id-1].time) {
-            console.log("HITTTT");
-            issues[id-1].status = "unattended";
-            RewardForRescue(issues[id-1].user);
-            issues[id-1].rewardstatus="Reward successfull";
-            emit Status(issues[id-1].status,issues[id-1].rewardstatus);
-        }
-        else{
-            issues[id-1].rewardstatus="pending";
+        if (block.timestamp > issue.timestamp + issue.time) {
+            issue.status = Status.UNATTENDED;
+            rewardForRescue(issue.user);
+            issue.rewardStatus = RewardStatus.SUCCESSFUL;
+            emit StatusUpdated(issue.status, issue.rewardStatus);
+        } else {
+            issue.rewardStatus = RewardStatus.PENDING;
             revert("Status Pending!");
         }
     }
-
-
- 
 }
