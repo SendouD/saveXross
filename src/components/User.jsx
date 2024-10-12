@@ -29,6 +29,13 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
     initContract();
   }, [blueAddress]);
 
+  // Check if the user is new after the contract is initialized
+  useEffect(() => {
+    if (bluecontract) {
+      checkNewUser();
+    }
+  }, [bluecontract]);
+
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
@@ -45,7 +52,6 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
       observer.observe(elementRef.current);
     }
     setIssues([]);
-    checkNewUser();
 
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", () => {
@@ -58,16 +64,19 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
         observer.unobserve(elementRef.current);
       }
     };
-  }, [bluecontract]); // Depend on the contract instance
+  }, []);
 
-  
   async function checkNewUser() {
     if (bluecontract) {
-      const data = await bluecontract.isAUser();
-      setIsnewUser(!data);
+      try {
+        const data = await bluecontract.isAUser();
+        console.log("User is ", data);
+        setIsnewUser(!data); // Update state according to contract response
+      } catch (error) {
+        console.error("Error checking new user:", error);
+      }
     }
   }
-
 
   async function tickPress(index) {
     if (bluecontract) {
@@ -83,7 +92,7 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
     }
   }
 
-  async function settingIssue(event) {
+  async function settingIssue() {
     if (!regex.test(phoneno) || addres.length < 8) {
       alert("Enter a valid Phone No.: / Address");
     } else if (bluecontract) {
@@ -102,11 +111,20 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
     }
   }
 
-  async function settingNewUser(event) {
+  async function settingNewUser() {
     if (bluecontract) {
       await requestAccount();
-      const transaction = await bluecontract.newUser();
-      await transaction.wait();
+      try {
+        const transaction = await bluecontract.newUser();
+        const receipt = await transaction.wait(); // Wait for the transaction to be mined
+        if (receipt.status === 1) { // Check if the transaction was successful
+          setIsnewUser(false); // Update the state to reflect that the user is no longer new
+        } else {
+          alert("Transaction failed!"); // Handle transaction failure
+        }
+      } catch (error) {
+        alert("Error during transaction: " + error.message); // Handle any errors
+      }
     }
   }
 
@@ -221,7 +239,6 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
           </div>
         </div>
       </div>
-
     </>
   );
 }
@@ -240,16 +257,18 @@ function IssueCard({ issue, ind, tickPress }) {
           <span className="ban">Address: </span> {issue.location.toString()}
         </div>
         <div>
-          <span className="ban">Phone No.: </span> {issue.phone.toString()}
+          <span className="ban">Phone No: </span> {issue.contact}
         </div>
-        <div className="status-btn-container">
-          {issue.status === "pending" && (
-            <button className="tick-btn" onClick={() => tickPress(ind - 1)}>
-              Tick
-            </button>
-          )}
+        <div>
+          <span className="ban">Rescue Time: </span> {issue.time}
+        </div>
+        <div>
+          <span className="ban">Status: </span> {issue.status}
         </div>
       </div>
+      <button className="tick-btn" onClick={() => tickPress(ind)}>
+        Complete a Rescue!
+      </button>
     </div>
   );
 }
