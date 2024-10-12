@@ -3,8 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import { ethers } from "ethers";
 import Bluexross from "../artifacts/contracts/Bluexross.sol/Bluexross.json";
 import StakeTokens from "../artifacts/contracts/stakecoin.sol/StakeTokens.json";
+import IssueCard from "./IssueCard.jsx";
 
-function User({ blueAddress, stakeAddress, rewardAddress }) {
+
+function User({ blueAddress, stakeAddress }) {
   const elementRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [injury, setInjury] = useState("");
@@ -13,10 +15,9 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
   const [issues, setIssues] = useState([]);
   const [isnewUser, setIsnewUser] = useState(true);
   const [issueBool, setIssueBool] = useState(false);
-  const [bluecontract, setBluecontract] = useState(null); // Store contract instance
+  const [bluecontract, setBluecontract] = useState(null);
   const regex = /^[6789][0-9]{9}$/;
 
-  // Initialize the contract instance once and store it in the state
   useEffect(() => {
     async function initContract() {
       if (typeof window.ethereum !== "undefined") {
@@ -29,7 +30,6 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
     initContract();
   }, [blueAddress]);
 
-  // Check if the user is new after the contract is initialized
   useEffect(() => {
     if (bluecontract) {
       checkNewUser();
@@ -70,8 +70,7 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
     if (bluecontract) {
       try {
         const data = await bluecontract.isAUser();
-        console.log("User is ", data);
-        setIsnewUser(!data); // Update state according to contract response
+        setIsnewUser(!data);
       } catch (error) {
         console.error("Error checking new user:", error);
       }
@@ -116,14 +115,14 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
       await requestAccount();
       try {
         const transaction = await bluecontract.newUser();
-        const receipt = await transaction.wait(); // Wait for the transaction to be mined
-        if (receipt.status === 1) { // Check if the transaction was successful
-          setIsnewUser(false); // Update the state to reflect that the user is no longer new
+        const receipt = await transaction.wait();
+        if (receipt.status === 1) {
+          setIsnewUser(false);
         } else {
-          alert("Transaction failed!"); // Handle transaction failure
+          alert("Transaction failed!");
         }
       } catch (error) {
-        alert("Error during transaction: " + error.message); // Handle any errors
+        alert("Error during transaction: " + error.message);
       }
     }
   }
@@ -131,14 +130,36 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
   async function getIssues() {
     setIssueBool(false);
     setIssues([]);
+
     if (bluecontract) {
       await requestAccount();
-      const transaction = await bluecontract.getCheckAndReward();
-      for (let i = 0; i < transaction.length; i++) {
-        const issueDetails = await bluecontract.issues(transaction[i] - 1);
-        setIssues((prev) => [...prev, issueDetails]);
+
+      try {
+        const issueIds = await bluecontract.getCheckAndReward();
+        console.log("Issue IDs: ", issueIds);
+
+        const fetchedIssues = [];
+        for (let i = 0; i < issueIds.length; i++) {
+          const issueDetails = await bluecontract.issues(issueIds[i] - 1);
+          console.log(`Issue details for ID ${issueIds[i]}: `, issueDetails);
+
+          const issue = {
+            user: issueDetails[0],
+            Id: issueDetails[1].toNumber(),
+            phoneno: issueDetails[2].toNumber(),
+            addres: issueDetails[3],
+            time: issueDetails[5].toNumber(),
+          };
+          console.log("Processed issue: ", issue);
+          fetchedIssues.push(issue);
+        }
+
+        console.log("Fetched Issues: ", fetchedIssues);
+        setIssues(fetchedIssues);
+        boolIssues();
+      } catch (error) {
+        console.error("Error fetching issues: ", error);
       }
-      boolIssues();
     }
   }
 
@@ -230,46 +251,25 @@ function User({ blueAddress, stakeAddress, rewardAddress }) {
             {issues.length === 0 ? (
               <div className="no-issues">No Issues</div>
             ) : (
-              issues.map((issue) => {
-                return issue.status === "pending" ? (
-                  <IssueCard issue={issue} ind={issue.Id} tickPress={tickPress} />
-                ) : null;
-              })
+              <div className="issues-container">
+                {issues.map((issue) => (
+                  <IssueCard
+                    key={issue.Id}
+                    id={issue.Id}     
+                    user={issue.user}           
+                    phoneNo={issue.phoneno}    
+                    address={issue.addres}  
+                    tickPress={tickPress}
+                  />
+                ))}
+              </div>
             )}
           </div>
         </div>
       </div>
-    </>
-  );
-}
 
-function IssueCard({ issue, ind, tickPress }) {
-  return (
-    <div className="issue-card">
-      <div>
-        <div>
-          <span className="ban">ID: </span> {Number(issue.Id)}
-        </div>
-        <div>
-          <span className="ban">Severity: </span> {issue.issue.toString()}
-        </div>
-        <div>
-          <span className="ban">Address: </span> {issue.location.toString()}
-        </div>
-        <div>
-          <span className="ban">Phone No: </span> {issue.contact}
-        </div>
-        <div>
-          <span className="ban">Rescue Time: </span> {issue.time}
-        </div>
-        <div>
-          <span className="ban">Status: </span> {issue.status}
-        </div>
-      </div>
-      <button className="tick-btn" onClick={() => tickPress(ind)}>
-        Complete a Rescue!
-      </button>
-    </div>
+      <Footer />
+    </>
   );
 }
 
