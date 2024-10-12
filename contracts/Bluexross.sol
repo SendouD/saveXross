@@ -186,7 +186,7 @@ contract Bluexross is Ownable, AccessControl{
         return RewardToken.balanceOf(msg.sender);
     }
 
-    function isNewUser() public view returns (bool) {
+    function isAUser() public view returns (bool) {
         return UserList[msg.sender];
     }
 

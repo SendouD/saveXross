@@ -2,20 +2,61 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import "./css/Header.css";
 import Bluexross from "../artifacts/contracts/Bluexross.sol/Bluexross.json";
-
-function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, rewardBalance,verified,admined }) {
+function Header({ blueAddress, ckv, cka }) {
+    
+    const [stakeBalance, setStakeBalance] = useState("");
+    const [rewardBalance, setRewardBalance] = useState("");
+    const [ckverifer, setCkverifier] = useState(false);
+    const [ckowner, setOwner] = useState(false);
     const [add,setAdd] = useState("")
-    // async function ckVerifyer() {
-    //     const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
-    //     const transaction = await bluecontract.CheckverifierAccess();
-    //     console.log(transaction);
-
-        
-    // }
+    const [bluecontract, setBlueContract]=useState(null);
 
     useEffect(() => {
+        async function initContract() {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
+          const bluecontract = new ethers.Contract(blueAddress, Bluexross.abi, signer);
+          setBlueContract(bluecontract);
+        }
+    
+        initContract();
         getAdd();
-    },[])
+        getBalance();
+        ckVerifyer();
+        ckAdmin();
+      }, []);
+
+
+    
+  async function getBalance() {
+    if (bluecontract) {
+      try {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const stakeData = await bluecontract.getstakebalance();
+        setStakeBalance(stakeData.toString());
+
+        const rewardData = await bluecontract.getrewardbalance();
+        setRewardBalance(rewardData.toString());
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    }
+  }
+
+  async function ckVerifyer() {
+    if (bluecontract) {
+      const transaction = await bluecontract.CheckverifierAccess();
+      setCkverifier(transaction);
+    }
+  }
+
+  async function ckAdmin() {
+    if (bluecontract) {
+      const transaction = await bluecontract.checkOwner();
+      setOwner(transaction);
+    }
+  }
+
 
     async function getAdd() {
         try{
@@ -40,14 +81,12 @@ function Header({ blueAddress, stakeAddress, rewardAddress, stakeBalance, reward
 
                     <div className="header-middle">
                         <a href="/user" className="nav-links baba">User</a>
-                       {(verified)?<a href="/verifier" className="nav-links" >Verifier</a>: null}
-                       {(admined)?<a href="/admin" className="nav-links">Admin</a>: null} 
+                       {(ckv)?<a href="/verifier" className="nav-links" >Verifier</a>: null}
+                       {(cka)?<a href="/admin" className="nav-links">Admin</a>: null} 
                     </div>
 
                     <div className="header-right">
                         {
-                            // (add === "") ?
-                            // <button className="connect-btn" onClick={getAdd}>Connect</button> :
                             <span className="user-add">Acc:{add}</span>
                         }
                         <div>
