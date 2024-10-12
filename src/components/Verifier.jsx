@@ -7,13 +7,13 @@ import Bluexross from "../artifacts/contracts/Bluexross.sol/Bluexross.json";
 function Verifier({ blueAddress, stakeAddress, rewardAddress }) {
     const elementRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
-    const [issues, setIssues] = useState(null);
+    const [issues, setIssues] = useState([]);
     const [bluecontract, setBlueContract] = useState(null); // Store contract instance
     const navigate = useNavigate();
 
     // Helper function to get provider, signer, and contract instance
     async function setupContract() {
-        if (typeof window.ethereum !== "undefined") {
+        if (typeof window.ethereum!== "undefined") {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const contractInstance = new ethers.Contract(blueAddress, Bluexross.abi, signer);
@@ -53,16 +53,21 @@ function Verifier({ blueAddress, stakeAddress, rewardAddress }) {
     }
 
     async function getIssues() {
-        setIssues(null);
+        setIssues([]);
         if (bluecontract) {
             try {
                 const data = await bluecontract.getIssues();
-                setIssues(data);
+                setIssues(data.map(issue => ({
+                    ...issue,
+                    Id: Number(issue.Id.toString()),
+                    phoneno: Number(issue.phoneno.toString())
+                })));
             } catch (error) {
                 console.log("Error fetching issues: ", error);
             }
         }
     }
+    
 
     async function handleVerifyAction(action, index) {
         if (bluecontract) {
@@ -80,20 +85,21 @@ function Verifier({ blueAddress, stakeAddress, rewardAddress }) {
     return (
         <>
             <div className="body">
-                <div ref={elementRef} className={(!isVisible) ? "about-left" : "about-left fade-in"}>
+                <div ref={elementRef} className={(!isVisible)? "about-left" : "about-left fade-in"}>
                     <div className="arcs">
                         <div className="form-name goof">Verify Portal</div>
                         <button className="get-issues-btn submit" onClick={getIssues}>Get Issues</button>
                     </div>
                 </div>
-                <div className={(!isVisible) ? "about-right" : "about-right fade-in"}>
+                <div className={(!isVisible)? "about-right" : "about-right fade-in"}>
                     <div>
-                        { (issues == null || issues.length === 0) 
-                            ? <div className="no-issues">No Issues</div>
-                            : issues.map((issue, i) => (
-                                issue.status === "pending" && <IssueCard key={issue.Id} issue={issue} ind={i} handleVerifyAction={handleVerifyAction} />
+                        {issues.length === 0 ? (
+                            <div className="no-issues">No Issues</div>
+                        ) : (
+                            issues.map((issue, i) => (
+                                <IssueCard key={i} issue={issue} index={i} handleVerifyAction={handleVerifyAction} />
                             ))
-                        }
+                        )}
                     </div>
                 </div>
             </div>
@@ -101,18 +107,18 @@ function Verifier({ blueAddress, stakeAddress, rewardAddress }) {
     );
 }
 
-function IssueCard({ issue, ind, handleVerifyAction }) {
+function IssueCard({ issue, index, handleVerifyAction }) {
     return (
         <div className="issue-card">
             <div>
-                <div><span className="ban">ID: </span> {Number(issue.Id)}</div>
+                <div><span className="ban">ID: </span> {Number(issue.Id.toString())}</div>
                 <div><span className="ban">User: </span> {issue.user}</div>
                 <div><span className="ban">Address: </span> {issue.addres}</div>
-                <div><span className="ban">Phone No.: </span> {issue.phoneno}</div>
+                <div><span className="ban">Phone No.: </span> {issue.phoneno.toString()}</div>
             </div>
             <div>
-                <button className="tick-btn submit" onClick={() => handleVerifyAction(false, ind)}>&#10004;</button>
-                <button className="cross-btn submit" onClick={() => handleVerifyAction(true, ind)}>&#10005;</button>
+                <button className="tick-btn submit" onClick={() => handleVerifyAction(false, index)}>&#10004;</button>
+                <button className="cross-btn submit" onClick={() => handleVerifyAction(true, index)}>&#10005;</button>
             </div>
         </div>
     );

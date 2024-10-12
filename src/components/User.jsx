@@ -136,12 +136,12 @@ function User({ blueAddress, stakeAddress }) {
 
       try {
         const issueIds = await bluecontract.getCheckAndReward();
-        console.log("Issue IDs: ", issueIds);
+
 
         const fetchedIssues = [];
         for (let i = 0; i < issueIds.length; i++) {
           const issueDetails = await bluecontract.issues(issueIds[i] - 1);
-          console.log(`Issue details for ID ${issueIds[i]}: `, issueDetails);
+      
 
           const issue = {
             user: issueDetails[0],
@@ -150,11 +150,9 @@ function User({ blueAddress, stakeAddress }) {
             addres: issueDetails[3],
             time: issueDetails[5].toNumber(),
           };
-          console.log("Processed issue: ", issue);
           fetchedIssues.push(issue);
         }
 
-        console.log("Fetched Issues: ", fetchedIssues);
         setIssues(fetchedIssues);
         boolIssues();
       } catch (error) {
